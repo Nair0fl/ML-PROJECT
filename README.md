@@ -3,11 +3,25 @@
 Projet d'initiation à la reconnaissance faciale réalisé dans le cadre du cours de Machine Learning Ynov 2019
 
 ## Contributeurs: 
-* Antoine Drouard - Coblestone
-* Benoît Cochet - BenoitCochet
-* Clément Caillaud - ClementCaillaud
-* Florian Boche - Nair0fl
+* [Antoine Drouard](https://github.com/Coblestone) 
+* [Benoît Cochet](https://github.com/BenoitCochet)
+* [Clément Caillaud](https://github.com/ClementCaillaud)
+* [Florian Boche](https://github.com/Nair0fl)
 
-# Structure du projet
+## Avancement
 
-TODO
+ - [ ] Construire un jeu de données (entrainement et test)
+ - [ ] Faire un algorithme d'apprentissage
+ - [ ] Faire un algorithme de reconnaissance
+ - [ ] Identifier et délimiter les visages sur une image
+ - [ ] Reconnaître un visage depuis la webcam
+ 
+ Rendu du projet le vendredi 03 mai 2019
+
+## Installation
+
+*TODO*
+
+## Utilisation
+
+*TODO*
