@@ -29,17 +29,16 @@ def detectAndDraw(test_img):
 
 
 #load test images
-test_img2 = cv2.imread("Data/antoinedrouard.png")
-test_img1 = cv2.imread("Data/clementcaillaud.png")
+entries = os.listdir('Data/')
+for entry in entries:
+    test_img = cv2.imread("Data/"+entry)
+    test_img = detectAndDraw(test_img)
+    cv2.imshow(entry, test_img)
 
-test_img1 = detectAndDraw(test_img1)
-test_img2 = detectAndDraw(test_img2)
 
 print("Prediction complete")
 
 #display both images
-cv2.imshow("Image1", test_img2)
-cv2.imshow("Image2", test_img1)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 cv2.waitKey(1)
