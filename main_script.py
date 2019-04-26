@@ -21,12 +21,10 @@ def draw_text(img, text, x, y):
 def detectAndDraw(test_img,svr):
     img = test_img.copy()
     rects = detect_face(img)
-    rects=shape_data(rects)
-    print(img)
-    label=svr.predict(shape_data(img.shape))
     for rect in rects:
         draw_rectangle(img,rect )
-        draw_text(img, label, rect[0], rect[1]-5)
+        label=svr.predict([rect])
+        draw_text(img, label[0], rect[0], rect[1]-5)
         
     return img
 
@@ -38,7 +36,6 @@ def loadTestDataset(path):
         data = dataset()
         dirs = os.listdir(path)
         targets = []
-        filenames = []
         images = []
         for dir_name in dirs:
             path2=path+"/"+dir_name+"/"
@@ -47,41 +44,23 @@ def loadTestDataset(path):
             name=dir_name.split("_")[0]+" "+dir_name.split("_")[1]
 
             for x in imagePaths:
-                filename = os.path.basename(x)
+                faces=detect_face(cv2.imread(x))
                 target = name
-                targets.append(target)
-                filenames.append(filename)
-                images.append(cv2.imread(x,0).shape)
+                for face in faces:
+                    targets.append(target)
+                    images.append(face)
     
         data.target = targets
         data.images =images
-        data.filenames = filenames
 
         return data
 
-def shape_data(data):
-        n_samples = len(data)
-        return data.reshape((n_samples, -1))
-    
-def train_classifer(data,target):
-        classifier = svm.SVC(gamma=0.001)
-        classifier.fit(data, target)
-        return classifier
-
-
 
 faces=loadTestDataset("Data/training")
-
-# Training our classifer so it knows how to classify digits
-x_train, X_test, y_train, y_test = train_test_split(faces.images, faces.target,
-                                                        random_state=42,
-                                                        test_size=0.1)
+print(faces.images[0])
 classifier = svm.SVC(gamma=0.001)
-print(x_train)
 
 classifier.fit(faces.images, faces.target)
-
-#load test images
 entries = os.listdir('Data/test')
 
 for entry in entries:
@@ -90,6 +69,10 @@ for entry in entries:
     cv2.imshow(entry, test_img)
 
 print("Prediction complete")
+print(a)
+print(y_test)
+#load test images
+
 
 #display both images
 cv2.waitKey(0)
