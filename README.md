@@ -10,10 +10,9 @@ Projet d'initiation à la reconnaissance faciale réalisé dans le cadre du cour
 
 ## Avancement
 
- - [ ] Construire un jeu de données (entrainement et test)
- - [ ] Faire un algorithme d'apprentissage
- - [ ] Faire un algorithme de reconnaissance
- - [ ] Identifier et délimiter les visages sur une image
+ - [X] Construire un jeu de données (entrainement et test)
+ - [X] Faire un algorithme de reconnaissance
+ - [X] Identifier et délimiter les visages sur une image
  - [ ] Reconnaître un visage depuis la webcam
  
  Rendu du projet le vendredi 03 mai 2019
