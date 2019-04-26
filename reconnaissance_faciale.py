@@ -16,20 +16,13 @@ def main():
     target = faces['target']
     #Création d'un jeu de train et de test
     x_train, x_test, y_train, y_test = train_test_split(data, target, test_size=0.25, random_state=42)
-    
+    #Création du SVM
     clf = svm.SVC(kernel='linear')
-    clf = entrainement(clf, x_train, y_train)
-    prediction(clf, x_test, y_test)
-    
-def entrainement(classifieur, x_train, y_train):
     #Entrainement
-    classifieur.fit(x_train, y_train)
-    return classifieur
-
-def prediction(classifieur, x_test, y_test):
-    #Tests de prédicition sur le jeu de test
+    clf.fit(x_train, y_train)
+    #Prédiction
     for key, x in enumerate(x_test):
-        prediction = classifieur.predict([x])
+        prediction = clf.predict([x])
         print("Prediction : ", prediction[0], " | Réalité : ", y_test[key])
 
 if __name__ == "__main__":
