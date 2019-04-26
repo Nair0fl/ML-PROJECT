@@ -1,8 +1,8 @@
 import cv2
 from sklearn.model_selection import train_test_split
 import os
-from sklearn.svm import SVC
-
+from sklearn import svm
+import scipy
 import numpy as np
 
 def detect_face(img):
@@ -28,42 +28,60 @@ def detectAndDraw(test_img,svr):
         
     return img
 
+class dataset:
+        def __init_():
+                return
+            
 def loadTestDataset(path):
         data = dataset()
+        dirs = os.listdir(path)
         targets = []
         filenames = []
         images = []
+        for dir_name in dirs:
+            path2=path+"/"+dir_name+"/"
+            imagePaths = [ path2 + f for f in os.listdir(path2) if os.path.isfile(os.path.join(path2,f))]
+            imagePaths = sorted(imagePaths)
+            name=dir_name.split("_")[0]+" "+dir_name.split("_")[1]
 
-        imagePaths = [ path + f for f in listdir(path) if isfile(join(path,f))]
-        imagePaths = sorted(imagePaths)
-
-        for x in imagePaths:
+            for x in imagePaths:
                 filename = os.path.basename(x)
-                target = filename.split("-")
-                target = target[0]
-                target = int(target)
-
+                target = name
+                target = target
                 targets.append(target)
                 filenames.append(filename)
                 images.append(scipy.misc.imread(x,1))
-
-        data.target = np.asarray(targets)
-        data.images = np.asarray(images)
+    
+        data.target = targets
+        data.images =images
         data.filenames = filenames
 
         return data
 
+def shape_data(data):
+        n_samples = len(data)
+        return data.reshape((n_samples, -1))
+    
+def train_classifer(data,target):
+        classifier = svm.SVC(gamma=0.001)
+        classifier.fit(data, target)
+        return classifier
 
-x=loadTestDataset("Data/training")
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
-svr = SVC(gamma='scale')
-svr.fit(x,y)
+
+
+faces=loadTestDataset("Data/training")
+
+# Training our classifer so it knows how to classify digits
+print(faces.target)
+x_train, X_test, y_train, y_test = train_test_split(faces.images, faces.target,
+                                                        random_state=42,
+                                                        test_size=0.1)
+classifier = svm.SVC(gamma=0.001)
+print(y_test)
+print(x_train)
+
+classifier.fit(test_x, test_x)
 #load test images
-entries = os.listdir('Data/test')
-for entry in entries:
-    test_img = cv2.imread("Data/test/"+entry)
-    test_img = detectAndDraw(test_img,svr)
-    cv2.imshow(entry, test_img)
 
 
 print("Prediction complete")
