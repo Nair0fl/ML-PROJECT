@@ -4,6 +4,7 @@ import os
 from sklearn import svm
 import scipy
 import numpy as np
+from reconnaissance_faciale import ReconnaissanceFaciale 
 
 def detect_face(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -18,13 +19,13 @@ def draw_rectangle(img, rect):
 def draw_text(img, text, x, y):
     cv2.putText(img, text, (x, y), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)
 
-def detectAndDraw(test_img,svr):
+def detectAndDraw(test_img,rf,classifier):
     img = test_img.copy()
     rects = detect_face(img)
     for rect in rects:
         draw_rectangle(img,rect )
-        label=svr.predict([rect])
-        draw_text(img, label[0], rect[0], rect[1]-5)
+        label=rf.reconnaitre_un_visage(classifier,rect)
+        draw_text(img, label, rect[0], rect[1]-5)
         
     return img
 
@@ -57,20 +58,17 @@ def loadTestDataset(path):
 
 
 faces=loadTestDataset("Data/training")
-print(faces.images[0])
 classifier = svm.SVC(gamma=0.001)
-
-classifier.fit(faces.images, faces.target)
+rf= ReconnaissanceFaciale()
+rf.entrainer(faces.images,faces.target,classifier)
 entries = os.listdir('Data/test')
 
 for entry in entries:
     test_img = cv2.imread("Data/test/"+entry)
-    test_img = detectAndDraw(test_img,classifier)
+    test_img = detectAndDraw(test_img,rf,classifier)
     cv2.imshow(entry, test_img)
 
 print("Prediction complete")
-print(a)
-print(y_test)
 #load test images
 
 
