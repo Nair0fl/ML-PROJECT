@@ -20,33 +20,42 @@ def draw_text(img, text, x, y):
 
 def detectAndDraw(test_img,svr):
     img = test_img.copy()
-    rects = detect_face(img).shape
+    rects = detect_face(img)
     for rect in rects:
-        draw_rectangle(img, rects)
-        label=svr.predict(rects)
-        draw_text(img, label, rects[0], rects[1]-5)
+        draw_rectangle(img, rect)
+        label=svr.predict(rect)
+        draw_text(img, label, rect[0], rect[1]-5)
         
     return img
 
-def prepare_training_data(data_folder_path):
-    dirs = os.listdir(data_folder_path)
-    names=[]
-    faces=[]
-    for dir_name in dirs:
-        if dir_name != "test":
-            img_folder_path=data_folder_path+"/"+dir_name
-            img_folder = os.listdir(img_folder_path)
-            name=dir_name.split("_")[0]+" "+dir_name.split("_")[1]
-            for imgs in img_folder:
-                imgs_path=img_folder_path+"/"+imgs
-                img_path=img_folder_path+"/"+imgs
-                test_img = cv2.imread(img_path)
-                faces.append(detect_face(test_img).shape)
-                names.append(name)
-    return faces,names;
+def loadTestDataset(path):
+        data = dataset()
+        targets = []
+        filenames = []
+        images = []
 
-x,y=prepare_training_data("Data/training")
-#x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
+        imagePaths = [ path + f for f in listdir(path) if isfile(join(path,f))]
+        imagePaths = sorted(imagePaths)
+
+        for x in imagePaths:
+                filename = os.path.basename(x)
+                target = filename.split("-")
+                target = target[0]
+                target = int(target)
+
+                targets.append(target)
+                filenames.append(filename)
+                images.append(scipy.misc.imread(x,1))
+
+        data.target = np.asarray(targets)
+        data.images = np.asarray(images)
+        data.filenames = filenames
+
+        return data
+
+
+x=loadTestDataset("Data/training")
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
 svr = SVC(gamma='scale')
 svr.fit(x,y)
 #load test images
@@ -55,7 +64,7 @@ for entry in entries:
     test_img = cv2.imread("Data/test/"+entry)
     test_img = detectAndDraw(test_img,svr)
     cv2.imshow(entry, test_img)
-    
+
 
 print("Prediction complete")
 
