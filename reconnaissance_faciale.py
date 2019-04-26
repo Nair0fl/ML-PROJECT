@@ -54,3 +54,4 @@ class ReconnaissanceFaciale:
                 print("Je me suis trompé, je pensais qu'il s'agissait de", prediction[0],"mais c'était", reponse)
         else:
             print("Je pense qu'il s'agit de", prediction[0])
+        return prediction[0]
