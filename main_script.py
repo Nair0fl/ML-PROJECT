@@ -62,24 +62,29 @@ def loadTestDataset(path):
 
     return data
 
+def main():
+    #Chargement des données d'entrainement
+    faces = loadTestDataset("Data/training")
+    #Création du classifieur SVM
+    classifier = svm.SVC(gamma=0.001)
+    rf = ReconnaissanceFaciale()
+    #Entrainement
+    rf.entrainer(faces.images, faces.target, classifier)
+    #Chargement des données de test
+    entries = os.listdir('Data/test')
+    
+    #Pour chaque image à prédire on l'affiche et on tente de trouver le nom des personnes sur la photo
+    for entry in entries:
+        test_img = cv2.imread("Data/test/"+entry)
+        test_img = detectAndDraw(test_img, rf, classifier)
+        cv2.imshow(entry, test_img)
+    print("Prediction complete")
+    
+    #Fin du programme et fermeture des images
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    cv2.waitKey(1)
+    cv2.destroyAllWindows()
 
-faces = loadTestDataset("Data/training")
-classifier = svm.SVC(gamma=0.001)
-rf = ReconnaissanceFaciale()
-rf.entrainer(faces.images, faces.target, classifier)
-entries = os.listdir('Data/test')
-
-for entry in entries:
-    test_img = cv2.imread("Data/test/"+entry)
-    test_img = detectAndDraw(test_img, rf, classifier)
-    cv2.imshow(entry, test_img)
-
-print("Prediction complete")
-#load test images
-
-
-#display both images
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-cv2.waitKey(1)
-cv2.destroyAllWindows()
+if __name__ == "__main__":
+    main()   
