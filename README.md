@@ -25,6 +25,7 @@ Ce projet nécessite l'installation des éléments suivants :
  - sklearn
  - cv2
  - os
+ - timeit
 
 ## Utilisation
 
