@@ -47,39 +47,45 @@ def loadTestDataset(path):
     dirs = os.listdir(path)
     targets = []
     images = []
+    labels=[]
+    target=0
     for dir_name in dirs:
         path2 = path+"/"+dir_name+"/"
         imagePaths = [path2 + f for f in os.listdir(path2) if os.path.isfile(os.path.join(path2, f))]
         imagePaths = sorted(imagePaths)
         name = dir_name.split("_")[0]+" "+dir_name.split("_")[1]
-
+        labels.append(name)
         for x in imagePaths:
             img=cv2.imread(x)
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             faces = detect_face(img)
-            target = name
             for face in faces:
                 (x, y, w, h) = face
-                face = img[y:y+h, x:x+w]
+                face = gray[y:y+h, x:x+w]
                 targets.append(target)
-                images.append(face[0])
+                images.append(face)
+        target+=1
     data.target = targets
     data.images = images
-    data.images = np.asarray(data.images)
+    data.labels=labels
     return data
 
 def main():
     #Chargement des données d'entrainement
     faces = loadTestDataset("Data/training")
+    y_train=[]
+    i=0;
+    for label in faces.target:
+        y_train
     #Création du classifieur SVM
     classifier = svm.SVC(gamma=0.001)
+    #print(faces.images)
     rf = ReconnaissanceFaciale()
-    faces.images=[i for i in faces.images]
-    print(faces.images)
     #Entrainement
     rf.entrainer(faces.images, faces.target, classifier)
     #Chargement des données de test
     entries = os.listdir('Data/test')
-    #Pour chaque image à prédire on l'affiche et on tente de trouver le nom des personnes sur la photo
+    #Pour chaque image à prédire on l'affiche et on tente de trouver le nom     des personnes sur la photo
     for entry in entries:
         test_img = cv2.imread("Data/test/"+entry)
         test_img = detectAndDraw(test_img, rf, classifier)

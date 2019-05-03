@@ -5,6 +5,7 @@ Script basé en partie sur un de nos exercices de reconnaissance faciale
 from sklearn.datasets import fetch_olivetti_faces
 from sklearn.model_selection import train_test_split
 from sklearn import svm
+import numpy as np
 
 class ReconnaissanceFaciale:
     """
@@ -31,6 +32,8 @@ class ReconnaissanceFaciale:
     def entrainer(self, x_train, y_train, classifieur):
         """ Entrainement sur des photos """
         #Entrainement du classifieur
+        x_train=np.asarray(x_train)
+        print(x_train)
         classifieur.fit(x_train, y_train)
         #Calcul du nombre de photos dans le jeu d'entrainement
         nb_photos = len(x_train)
