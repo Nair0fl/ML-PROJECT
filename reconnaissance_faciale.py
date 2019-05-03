@@ -6,6 +6,7 @@ from sklearn.datasets import fetch_olivetti_faces
 from sklearn.model_selection import train_test_split
 from sklearn import svm
 import numpy as np
+from timeit import default_timer as timer
 
 class ReconnaissanceFaciale:
     """
@@ -39,6 +40,9 @@ class ReconnaissanceFaciale:
         print(test)
         
         classifieur.fit(test, y_train)
+        timer_start = timer()
+        classifieur.fit(x_train, y_train)
+        timer_end = timer()
         #Calcul du nombre de photos dans le jeu d'entrainement
         nb_photos = len(x_train)
         #Calcul du nombre de personnes dans le jeu d'entrainement
@@ -48,7 +52,7 @@ class ReconnaissanceFaciale:
                 personnes.append(person)
         nb_personnes = len(personnes)
         #Affichage du nombre de photos et de personnes dans le jeu d'entrainement
-        print("Je me suis entrainé sur", nb_photos, "photos représentant le visage de", nb_personnes, "personnes")
+        print("Je me suis entrainé sur", nb_photos, "photos représentant le visage de", nb_personnes, "personnes en", round(timer_end - timer_start, 6), "secondes")
 
     def reconnaitre_un_visage(self, classifieur, visage, reponse=None):
         """ Identifier un visage """
