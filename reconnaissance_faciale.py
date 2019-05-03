@@ -33,14 +33,10 @@ class ReconnaissanceFaciale:
     def entrainer(self, x_train, y_train, classifieur):
         """ Entrainement sur des photos """
         #Entrainement du classifieur
-        test=[]
-        for x in x_train:
-            test.append((x.reshape(1,-1)[0]))
-            print(x.reshape(1,-1)[0])
-        print(test)
-        
-        classifieur.fit(test, y_train)
         timer_start = timer()
+        x_train=np.array(x_train)
+        x_train=x_train
+        print(x_train[0])
         classifieur.fit(x_train, y_train)
         timer_end = timer()
         #Calcul du nombre de photos dans le jeu d'entrainement
@@ -57,6 +53,7 @@ class ReconnaissanceFaciale:
     def reconnaitre_un_visage(self, classifieur, visage, reponse=None):
         """ Identifier un visage """
         #Tentative de prédiction
+        print(visage)
         prediction = classifieur.predict([visage])
         #Affichage de la prédiction
         if reponse != None:
