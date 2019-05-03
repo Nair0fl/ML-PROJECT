@@ -32,9 +32,13 @@ class ReconnaissanceFaciale:
     def entrainer(self, x_train, y_train, classifieur):
         """ Entrainement sur des photos """
         #Entrainement du classifieur
-        x_train=np.asarray(x_train)
-        print(x_train)
-        classifieur.fit(x_train, y_train)
+        test=[]
+        for x in x_train:
+            test.append((x.reshape(1,-1)[0]))
+            print(x.reshape(1,-1)[0])
+        print(test)
+        
+        classifieur.fit(test, y_train)
         #Calcul du nombre de photos dans le jeu d'entrainement
         nb_photos = len(x_train)
         #Calcul du nombre de personnes dans le jeu d'entrainement
