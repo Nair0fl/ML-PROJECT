@@ -6,6 +6,7 @@ import cv2
 import os
 from sklearn import svm
 from reconnaissance_faciale import ReconnaissanceFaciale
+import numpy as np
 
 def detect_face(img):
     """ Détecte les visages au sein de la photo passée en paramètre """
@@ -28,8 +29,10 @@ def detectAndDraw(test_img, rf, classifier):
     img = test_img.copy()
     rects = detect_face(img)
     for rect in rects:
+        (x, y, w, h) = rect
+        face = img[y:y+h, x:x+w]
         draw_rectangle(img, rect)
-        label = rf.reconnaitre_un_visage(classifier, rect)
+        label = rf.reconnaitre_un_visage(classifier, face)
         draw_text(img, label, rect[0], rect[1]-5)
 
     return img
@@ -51,15 +54,17 @@ def loadTestDataset(path):
         name = dir_name.split("_")[0]+" "+dir_name.split("_")[1]
 
         for x in imagePaths:
-            faces = detect_face(cv2.imread(x))
+            img=cv2.imread(x)
+            faces = detect_face(img)
             target = name
             for face in faces:
+                (x, y, w, h) = face
+                face = img[y:y+h, x:x+w]
                 targets.append(target)
-                images.append(face)
-
+                images.append(face[0])
     data.target = targets
     data.images = images
-
+    data.images = np.asarray(data.images)
     return data
 
 def main():
@@ -68,11 +73,12 @@ def main():
     #Création du classifieur SVM
     classifier = svm.SVC(gamma=0.001)
     rf = ReconnaissanceFaciale()
+    faces.images=[i for i in faces.images]
+    print(faces.images)
     #Entrainement
     rf.entrainer(faces.images, faces.target, classifier)
     #Chargement des données de test
     entries = os.listdir('Data/test')
-    
     #Pour chaque image à prédire on l'affiche et on tente de trouver le nom des personnes sur la photo
     for entry in entries:
         test_img = cv2.imread("Data/test/"+entry)
